@@ -17,13 +17,14 @@ print(len(X_train))
 print(len(X_test))
 
 # Layers / Neurons
-print(tf.config.list_physical_devices())
+print(tf.test.is_gpu_available(cuda_only=True))
 
 X_train = X_train / 255
 X_test = X_test / 255
 print(tf.__version__)
 
-with tf.device("/GPU:0"):
+
+def train_model():
     data_augmentation = keras.Sequential([
         layers.RandomRotation(0.1, input_shape=(28, 28, 1)),
         layers.RandomZoom(0.1),
@@ -60,3 +61,9 @@ with tf.device("/GPU:0"):
 
     model.save("digit_classification_model.h5")
 
+
+if tf.test.is_gpu_available(cuda_only=True):
+    with tf.device("/GPU:0"):
+        train_model()
+else:
+    train_model()
