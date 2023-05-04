@@ -1,6 +1,8 @@
 # Handwirtten_digits_classification
 This project uses tensorflow and MNIST dataset in order to train a CNN model. This model is then loaded and an interface for writing digits is created 
-using pygame. Also ModelTest.py is provided in order to check the accuracy of model by plotting a heatmap. 
+using pygame. Also ModelTest.py is provided in order to check the accuracy of model by plotting a heatmap and classification report.
+
+This model gives an accuracy of 95% + on 25 epochs.
 
 Hope you will like it!
 
