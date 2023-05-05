@@ -4,6 +4,8 @@ using pygame. Also ModelTest.py is provided in order to check the accuracy of mo
 
 This model gives an accuracy of 95% + on 25 epochs.
 
+For quick implementation use digit_classification_model.h5 and main.py
+
 Hope you will like it!
 
 ![Screenshot (24)](https://user-images.githubusercontent.com/89479662/236265205-9cc74674-2f31-496e-9fbc-91a106ca5097.png)
