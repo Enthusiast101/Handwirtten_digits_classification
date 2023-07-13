@@ -2,28 +2,23 @@ import tensorflow as tf
 from tensorflow import keras
 from keras import layers
 from keras.models import Sequential
-#import matplotlib.pyplot as plt
 
 mnist = tf.keras.datasets.mnist
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-# Visualization
-#plt.gray()
-#plt.imshow(X_train[0])
-#plt.show()
 
 # Size
 print(len(X_train))
 print(len(X_test))
 
 # Layers / Neurons
-print(tf.config.list_physical_devices())
+print(tf.test.is_gpu_available(cuda_only=True))
 
 X_train = X_train / 255
 X_test = X_test / 255
 print(tf.__version__)
 
-with tf.device("/GPU:0"):
+# CNN Model
+def train_model():
     data_augmentation = keras.Sequential([
         layers.RandomRotation(0.1, input_shape=(28, 28, 1)),
         layers.RandomZoom(0.1),
@@ -56,7 +51,13 @@ with tf.device("/GPU:0"):
                   loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                   metrics=["accuracy"])
 
-    model.fit(X_train, y_train, epochs=25, batch_size=1000)
+    model.fit(X_train, y_train, epochs=25, batch_size=32)
 
     model.save("digit_classification_model.h5")
 
+# Testing if CUDA is availaible
+if tf.test.is_gpu_available(cuda_only=True):
+    with tf.device("/GPU:0"):
+        train_model()
+else:
+    train_model()
