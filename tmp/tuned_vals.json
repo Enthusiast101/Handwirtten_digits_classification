@@ -1,0 +1,1 @@
+{"conv_layers": 3, "conv1_filters": 96, "conv1_kernel": 3, "deep_layers": 2, "dropout": 0.30000000000000004, "dense_units": 320, "learning_rate": 0.001, "tuner/epochs": 10, "tuner/initial_epoch": 0, "tuner/bracket": 0, "tuner/round": 0}
