@@ -1,6 +1,5 @@
 import json
 import tensorflow as tf
-from tensorflow import keras
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
@@ -22,12 +21,11 @@ y_test = tf.keras.utils.to_categorical(y_test, num_classes=10)
 def build_model(data):
     model = Sequential()
     for _ in range(data["conv_layers"]):
-        model.add(Conv2D(filters=data['conv1_filters']),
-                  kernel_size=data['conv1_kernel'],
-                  activation='relu',
-                  padding='same',
-                  input_shape=(28, 28, 1))
-
+        model.add(Conv2D(filters=data["conv1_filters"],
+                         kernel_size=data["conv1_kernel"],
+                         activation='relu',
+                         padding='same',
+                         input_shape=(28, 28, 1)))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Flatten())
@@ -47,13 +45,7 @@ def build_model(data):
 with open(r"tmp/tuned_vals.json", "r") as file:
     data = json.load(file)
 
-
-datagen = ImageDataGenerator(rotation_range=10,
-                             zoom_range=0.1,
-                             width_shift_range=0.1,
-                             height_shift_range=0.1)
-
 model = build_model(data)
-# Perform the hyperparameter search with data augmentation
-model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=10)
+model.fit(X_train, y_train, epochs=5)
 model.save("digit_classification_model.h5")
+
