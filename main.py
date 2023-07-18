@@ -12,7 +12,7 @@ model = tf.keras.models.load_model("digit_classification_model.h5")
 
 pygame.init()
 pygame.font.init()
-FPS = 500
+FPS = 300
 delta = 100
 WIDTH, HEIGHT = 28 * 20, 28 * 20
 WIN = pygame.display.set_mode((WIDTH, HEIGHT + delta), pygame.HWSURFACE)
@@ -26,15 +26,11 @@ ORANGE = (255, 216, 168)
 YELLOW = (246, 202, 72)
 
 
-def canvas():
-    pygame.draw.rect(WIN, WHITE, pygame.Rect(0, 0, WIDTH, HEIGHT))
-
-
 def prediction_msg(msg):
-    pygame.draw.rect(WIN, WHITE, pygame.Rect(0, HEIGHT, WIDTH, delta))
-    font = pygame.font.SysFont("Open Sans", 40)
+    pygame.draw.rect(WIN, WHITE, pygame.Rect(0, HEIGHT, WIDTH, delta - 25))
+    font = pygame.font.SysFont("Cambria", 40)
     text = font.render(f"I predict it as: {msg}", True, BLACK)
-    WIN.blit(text, (170, HEIGHT + 50))
+    WIN.blit(text, (160, HEIGHT + 50))
 
 
 def call_NN():
@@ -56,7 +52,9 @@ def call_NN():
     print([round(val, 2) for val in pred_arr[0]], number_detected)
     prediction_msg(number_detected)
 
+    # Uncomment these lines to visualize the modified image
     #fig, ax = plt.subplots(figsize=(WIDTH / 100, HEIGHT / 100))
+
     #print(img.shape, number_detected)
     #ax.imshow(img[0])
     #plt.show()
@@ -64,13 +62,15 @@ def call_NN():
 
 def draw_digit(x_pos, y_pos):
     width = 25
+    # Rectangular tip
     #pygame.draw.rect(WIN, BLACK, pygame.Rect(x_pos, y_pos, width, width))
+    # Circular tip
     pygame.draw.circle(WIN, BLACK, (x_pos, y_pos), width)
 
 
 def main():
     run = True
-    is_pressed, submit = False, False
+    is_pressed, submit, clear = False, False, True
     clock = pygame.time.Clock()
 
     # Initializing window
@@ -84,14 +84,21 @@ def main():
 
             else:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    if not clear:
+                        WIN.fill(WHITE)
+                        clear = True
                     is_pressed = True
                 if event.type == pygame.MOUSEBUTTONUP:
                     is_pressed = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                        submit = True
+                        if not clear:
+                            WIN.fill(WHITE)
+                            clear = True
+                        else:
+                            submit = True
                     if event.key == pygame.K_BACKSPACE:
-                        canvas()
+                        WIN.fill(WHITE)
 
         if is_pressed:
             x_pos, y_pos = pygame.mouse.get_pos()
@@ -100,8 +107,9 @@ def main():
 
         if submit:
             call_NN()
-            canvas()
             submit = False
+            clear = False
+
         pygame.display.update()
 
 
